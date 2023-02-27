@@ -1,3 +1,8 @@
+# This example configuration is for a vindriktning containing a BME280 Temperature/Humidity/Pressure sensor,
+# a CCS811 VOC, eC02 sensor, and an SCD40 C02 sensor.
+# This configuration will add a switch for a light to your homeassistant dashboard which toggles the status
+# LEDs between a low brightness dark mode and a full brightness mode
+
 esphome:
   name: "vind3"
   platform: ESP8266
