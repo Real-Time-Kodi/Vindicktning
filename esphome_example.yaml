@@ -1,0 +1,151 @@
+esphome:
+  name: "vind3"
+  platform: ESP8266
+  board: d1_mini
+  on_boot:
+    priority: 600.0
+    then:
+      - light.turn_on:
+          id: sensorlight
+          brightness: 13%
+          effect: SensorEffect
+  
+i2c:
+  sda: D2
+  scl: D1
+  scan: True
+  frequency: 10kHz
+
+uart:
+  id: up1006
+  rx_pin: D4
+  tx_pin: D3
+  baud_rate: 9600
+
+sensor:
+#  - platform: htu21d
+#    temperature:
+#      name: "Temperature_21d"
+#    humidity:
+#      name: "Humidity"
+#      id: hum
+#    update_interval: 60s
+  - platform: bme280
+    temperature:
+      name: "Temperature"
+      id: temp
+      oversampling: 16x
+    pressure:
+      name: "Pressure"
+      id: bme280_pressure
+      on_value:
+        then:
+            - lambda: "id(scd40)->set_ambient_pressure_compensation(x / 1000.0);"
+    humidity:
+      name: "Humidity"
+      id: hum
+    address: 0x76
+    update_interval: 60s
+  - platform: ccs811
+    eco2:
+      name: "ECO2"
+    tvoc:
+      name: "VOC"
+      id: voc
+    temperature: temp
+    humidity: hum
+    address: 0x5A
+    update_interval: 60s
+  - platform: scd4x
+    id: scd40
+    co2:
+      name: "CO2"
+      id: co2
+  - platform: wifi_signal
+    name: "Wifi Signal"
+    update_interval: 60s
+  - platform: pm1006
+    uart_id: up1006
+    pm_2_5:
+      name: "Particulate Matter 2.5µm Concentration"
+      id: pm25
+    update_interval: 60s
+    
+    
+light:
+  - platform: neopixelbus
+    variant: WS2812
+    pin: D8
+    num_leds: 3
+    type: GRB
+    id: sensorlight
+    on_turn_on:
+      then:
+        - light.control:
+            id: sensorlight
+            effect: "SensorEffect"
+    entity_category: config
+    effects:
+      - addressable_lambda:
+          name: "SensorEffect"
+          update_interval: 5s
+          lambda: |-
+            int c=id(co2).state;
+            int v=id(voc).state;
+            int p=2;//id(pm25).state;
+            
+            float percent=(p-15)/60;
+            if(percent > 1) percent=1;
+            if(percent<  0) percent=0;
+            byte r=(byte)(percent * 255);
+            byte g=255-(byte)(percent*255);
+            /*if(!id(pm25).has_state()) it[0]=Color(255,255,255);
+            else*/ it[0] = Color(r,g,0);
+            
+            percent=(v-100)/1000;
+            if(percent > 1) percent=1;
+            if(percent<  0) percent=0;
+            r=(byte)(percent * 255);
+            g=255-(byte)(percent*255);
+            if(!id(voc).has_state()) it[1]=Color(255,255,255);
+            else it[1] = Color(r,g,0);
+            
+            percent=(c-500)/1500;
+            if(percent > 1) percent=1;
+            if(percent<  0) percent=0;
+            r=(byte)(percent * 255);
+            g=255-(byte)(percent*255);
+            if(!id(co2).has_state()) it[2]=Color(255,255,255);
+            else it[2] = Color(r,g,0);
+  - platform: binary
+    name: "Indicator Light"
+    id: indicatorlight
+    output: virtuallightoutput
+    
+output:
+  - platform: gpio
+    pin: D7
+    id: buzzer
+  - platform: template
+    id: virtuallightoutput
+    type: binary
+    write_action:
+      - if:
+          condition:
+            light.is_on: indicatorlight
+          then:
+            light.turn_on:
+              id: sensorlight
+              brightness: 75%
+              effect: SensorEffect
+          else:
+            light.turn_on:
+              id: sensorlight
+              brightness: 13%
+              effect: SensorEffect
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
