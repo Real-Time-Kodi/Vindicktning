@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name edge)(type KiCad)(uri ${KIPRJMOD}/edge.pretty)(options "")(descr ""))
+  (lib (name GCT_USB4120-03-C_REVA)(type KiCad)(uri ${KIPRJMOD}/GCT_USB4120-03-C_REVA.pretty)(options "")(descr ""))
+)
