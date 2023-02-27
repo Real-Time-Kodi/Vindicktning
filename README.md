@@ -17,6 +17,16 @@ You'll need both of the connectors, the electrolytic cap, and the diode.
 
 <img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Stock.jpg" height="350">
 
+# Parts List
+- [Usb Type C Connector](https://www.mouser.com/ProductDetail/640-USB4120-03-C)
+- 7x 0805 0.1uf Capacitors
+- 3x WS2812b LEDs
+- 1x 0805 10k Resistor(optional for buzzer)
+- 1x [MMBT2222](https://www.mouser.com/ProductDetail/241-MMBT2222AR100001) SOT Transistor or equivalent(optional for buzzer)
+- 1x Standard buzzer(optional)
+- Fine wire(Optional for USB data hookup)
+- Wemos D1 Mini
+
 # Board Assembly
 Using your preferred method, solder each of the components on to their 
 designated pads. All of the capacitors are 0.1uf except for the electrolytic 
