@@ -1,9 +1,10 @@
 # Vindicktning
-ESPHome compatible mod board for the Ikea Vindriktning  
 This board is designed to fit within the case of the Ikea Vindriktning and
 replicate its functionality while replacing the main MCU with and ESP8266 for
 home automation use. It also adds multiple i2c headers for adding other air 
 quality sensors.
+
+
 
 # Harvesting Components
 This step is relatively straightforward, I recommend using a soldering 
