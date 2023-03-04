@@ -89,16 +89,16 @@ and VOC concentrations. Program it with whichever method you usually use to
 program ESPHome devices.
 
 # Adding I2C Sensors
-Additional sensors can be added using the I2C headers. There are four of them,
-the pinout is: SDA | SCL | GND | VCC  
+Additional sensors can be added using the I2C headers. There are three of them of them
+with the following pinout: SDA | SCL | GND | VCC  
+The I2C4 header on the top of the board has positive and negative swapped so that it 
+can be used with [this sensor](https://www.amazon.com/gp/product/B0BHHRT1F6/): 
+SDA | SCL | VCC | GND  
 The voltage is 3.3 by default but it can be set to 5v by cutting the voltage selector
 trace and adding a solder blob on the 5v side. The silkscreen is clearly labled.
 
 Check [ESPHome.io](https://esphome.io/) for supported sensors and configuration
 documentation.
-
-The I2C4 header on the top of the board has positive and negative swapped so that it 
-can be used with [this sensor](https://www.amazon.com/gp/product/B0BHHRT1F6/).
 
 Sensors I have used:
 - SCD40 (CO2)
