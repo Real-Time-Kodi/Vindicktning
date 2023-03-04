@@ -1,6 +1,6 @@
 # Vindicktning
 This board is designed to fit within the case of the Ikea Vindriktning and
-replicate its functionality while replacing the main MCU with and ESP8266 for
+replicate its functionality while replacing the main MCU with an ESP8266 for
 home automation use. It also adds multiple i2c headers for adding other air 
 quality sensors.  
 <img src="https://github.com/Real-Time-Kodi/Vindicktning/blob/main/assemblypics/Cover.png" height="350"><img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Cover2.png" height="350"><img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Fitment.png" height="350">
@@ -62,12 +62,14 @@ perpendicular to the main PCB. Test the fitment before Reassembly!
 
 # USB Data lines for External Programming(Optional)
 There are two labeled test pads on the main PCB (D+ and D-) those two pads can
-be connected to these two pins on the Wemos D1's USB to Serial chip to allow
-you to program the device without opening it up. Note that this is not a valid
-implementation of USB and the type-c cable will only be able to program the
-device when inserted right-side up.
+be connected to the corresponding D+ and D- pins on the Wemos D1's USB to Serial chip to allow
+you to program the device without opening it up. There are several different USB -> Serial chips on the
+D1. Check the diagram below for specific pinout. Many modules will have the model numbers sanded off of
+the CH341. Note that this is not a valid implementation of USB and the type-c cable will only be able to 
+program the device when inserted right-side up.
 
-<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Data.png" height="350">
+<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Data.png" height="350">  
+<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/CH341A.gif" height="350">
 
 # Reassembly
 The Vindrictning top case needs to have these 2 standoffs removed. Flush 
