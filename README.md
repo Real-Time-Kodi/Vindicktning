@@ -25,7 +25,9 @@ You'll need both of the connectors, the electrolytic cap, and the diode.
 - 1x [MMBT2222](https://www.mouser.com/ProductDetail/241-MMBT2222AR100001) SOT Transistor or equivalent(optional for buzzer)
 - 1x Standard buzzer(optional)
 - Fine wire(Optional for USB data hookup)
-- Wemos D1 Mini
+- Wemos D1 Mini  
+
+I have a few kits available on my [tindie page](https://www.tindie.com/products/realtimekodi/vindriktning-air-quality-sensor-mod-boardesphome/#shipping).  
 
 # Board Assembly
 Using your preferred method, solder each of the components on to their 
