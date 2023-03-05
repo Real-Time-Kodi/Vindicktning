@@ -88,7 +88,11 @@ the board to clear the fan screws.
 See the included esphome example. It initializes all of the inbuilt perpherals 
 and has a function for fading the LEDs between colors based on the c02, pm2.5, 
 and VOC concentrations. Program it with whichever method you usually use to 
-program ESPHome devices.
+program ESPHome devices.  
+Please remember that the usb port will only connect the data pins with the type-c 
+connector in the upward orientation.  
+
+<img src="https://github.com/Real-Time-Kodi/Vindicktning/blob/main/assemblypics/esphome.png" height="350">
 
 # Adding I2C Sensors
 Additional sensors can be added using the I2C headers. There are three of them of them
