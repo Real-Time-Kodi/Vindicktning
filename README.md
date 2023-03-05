@@ -1,6 +1,6 @@
 # Vindicktning
 This board is designed to fit within the case of the Ikea Vindriktning and
-replicate its functionality while replacing the main MCU with and ESP8266 for
+replicate its functionality while replacing the main MCU with an ESP8266 for
 home automation use. It also adds multiple i2c headers for adding other air 
 quality sensors.  
 <img src="https://github.com/Real-Time-Kodi/Vindicktning/blob/main/assemblypics/Cover.png" height="350"><img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Cover2.png" height="350"><img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Fitment.png" height="350">
@@ -25,7 +25,9 @@ You'll need both of the connectors, the electrolytic cap, and the diode.
 - 1x [MMBT2222](https://www.mouser.com/ProductDetail/241-MMBT2222AR100001) SOT Transistor or equivalent(optional for buzzer)
 - 1x Standard buzzer(optional)
 - Fine wire(Optional for USB data hookup)
-- Wemos D1 Mini
+- Wemos D1 Mini  
+
+I have a few kits available on my [tindie page](https://www.tindie.com/products/realtimekodi/vindriktning-air-quality-sensor-mod-boardesphome/#shipping).  
 
 # Board Assembly
 Using your preferred method, solder each of the components on to their 
@@ -62,12 +64,14 @@ perpendicular to the main PCB. Test the fitment before Reassembly!
 
 # USB Data lines for External Programming(Optional)
 There are two labeled test pads on the main PCB (D+ and D-) those two pads can
-be connected to these two pins on the Wemos D1's USB to Serial chip to allow
-you to program the device without opening it up. Note that this is not a valid
-implementation of USB and the type-c cable will only be able to program the
-device when inserted right-side up.
+be connected to the corresponding D+ and D- pins on the Wemos D1's USB to Serial chip to allow
+you to program the device without opening it up. There are several different USB -> Serial chips on the
+D1. Check the diagram below for specific pinout. Many modules will have the model numbers sanded off of
+the CH341. Note that this is not a valid implementation of USB and the type-c cable will only be able to 
+program the device when inserted right-side up.
 
-<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Data.png" height="350">
+<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/Data.png" height="350">  
+<img src="https://github.com/Real-Time-Kodi/Vindicktning/raw/main/assemblypics/CH341A.gif" height="350">
 
 # Reassembly
 The Vindrictning top case needs to have these 2 standoffs removed. Flush 
@@ -87,16 +91,16 @@ and VOC concentrations. Program it with whichever method you usually use to
 program ESPHome devices.
 
 # Adding I2C Sensors
-Additional sensors can be added using the I2C headers. There are four of them,
-the pinout is: SDA | SCL | GND | VCC  
+Additional sensors can be added using the I2C headers. There are three of them of them
+with the following pinout: SDA | SCL | GND | VCC  
+The I2C4 header on the top of the board has positive and negative swapped so that it 
+can be used with [this sensor](https://www.amazon.com/gp/product/B0BHHRT1F6/): 
+SDA | SCL | VCC | GND  
 The voltage is 3.3 by default but it can be set to 5v by cutting the voltage selector
 trace and adding a solder blob on the 5v side. The silkscreen is clearly labled.
 
 Check [ESPHome.io](https://esphome.io/) for supported sensors and configuration
 documentation.
-
-The I2C4 header on the top of the board has positive and negative swapped so that it 
-can be used with [this sensor](https://www.amazon.com/gp/product/B0BHHRT1F6/).
 
 Sensors I have used:
 - SCD40 (CO2)
