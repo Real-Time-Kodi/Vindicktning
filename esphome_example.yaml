@@ -28,6 +28,7 @@ uart:
   baud_rate: 9600
 
 sensor:
+#Uncomment this section if you're using an htu21d temperature/humiditity sensor
 #  - platform: htu21d
 #    temperature:
 #      name: "Temperature_21d"
@@ -35,6 +36,7 @@ sensor:
 #      name: "Humidity"
 #      id: hum
 #    update_interval: 60s
+#BME/BMP280 Change the next line to BMP280 if using that sensor and also remove the humidity section
   - platform: bme280
     temperature:
       name: "Temperature"
@@ -43,24 +45,28 @@ sensor:
     pressure:
       name: "Pressure"
       id: bme280_pressure
+#Comment out the next section if you aren't using an SCD40 to measure CO2 concentration
       on_value:
         then:
             - lambda: "id(scd40)->set_ambient_pressure_compensation(x / 1000.0);"
     humidity:
       name: "Humidity"
       id: hum
-    address: 0x76
+    address: 0x76 #This can be 0x76 or 0x77 depending on the specific board you use
     update_interval: 60s
+#This next section is for the ccs811 sensor which is getting hard to find
+#Switch to BME680 or similar if you can't get ccs811
   - platform: ccs811
     eco2:
       name: "ECO2"
     tvoc:
       name: "VOC"
       id: voc
-    temperature: temp
-    humidity: hum
+    temperature: temp #This is for temperature compensation from the bme280
+    humidity: hum     #This is for humidity compensation from the bme280
     address: 0x5A
     update_interval: 60s
+#This section is for the scd40/sdc41 comment it out if you aren't using one
   - platform: scd4x
     id: scd40
     co2:
@@ -69,6 +75,7 @@ sensor:
   - platform: wifi_signal
     name: "Wifi Signal"
     update_interval: 60s
+#This section is for the pm1006 that comes with the vindriktning
   - platform: pm1006
     uart_id: up1006
     pm_2_5:
@@ -91,14 +98,19 @@ light:
             effect: "SensorEffect"
     entity_category: config
     effects:
+    # This lighting effect displays the air quality in 3 seperate LEDs if you have a pressure, c02,
+    # and PM2.5 measurement
       - addressable_lambda:
           name: "SensorEffect"
           update_interval: 5s
           lambda: |-
             int c=id(co2).state;
             int v=id(voc).state;
-            int p=2;//id(pm25).state;
+            int p=id(pm25).state;
             
+            // First LED
+            // PM2.5 sensor 0-15 ppm green, varies from green to yellow to red over the 15-60 range,
+            // Solid red when > 60
             float percent=(p-15)/60;
             if(percent > 1) percent=1;
             if(percent<  0) percent=0;
@@ -107,6 +119,9 @@ light:
             /*if(!id(pm25).has_state()) it[0]=Color(255,255,255);
             else*/ it[0] = Color(r,g,0);
             
+            // Second LED
+            // VOC Parts per billion, 0-100 green, varies from green to yellow to red over the 100-1000 range,
+            // Solid red when > 1000
             percent=(v-100)/1000;
             if(percent > 1) percent=1;
             if(percent<  0) percent=0;
@@ -115,6 +130,9 @@ light:
             if(!id(voc).has_state()) it[1]=Color(255,255,255);
             else it[1] = Color(r,g,0);
             
+            // Third LED Co2
+            // 0-500 green, varies from green to yellow to red over the 500-1500 range,
+            // Solid red when > 1500
             percent=(c-500)/1500;
             if(percent > 1) percent=1;
             if(percent<  0) percent=0;
@@ -126,11 +144,29 @@ light:
     name: "Indicator Light"
     id: indicatorlight
     output: virtuallightoutput
-    
+
+#Expose out buzzer to home assistant
+switch:
+  - platform: output
+    name: "Buzzer"
+    output: buzzer
+
 output:
+  # This section is for an active buzzer soldered into the buzzer position on the PCB
+  # Newer kits are shipping with a passive buzzer, comment this out is you are using a passive buzzer
   - platform: gpio
     pin: D7
     id: buzzer
+  # This section is for a passive buzzer soldered into the buzzer position on the PCB
+  # This is for newer kits, you can test if the buzzer is active or passive by feeding it 5v, if it buzzes,
+  # it is active and you should use the above section, if it does not, use the section below.
+  # To use this buzzer, see https://esphome.io/components/rtttl.html
+#  - platform: ledc
+#    pin: D7
+#    id: rttl_buzzer
+  # This section presents a light entity to homeassistant. When off, it sets the overall brightness of the
+  # LEDs to 13% so that the indicators can be dimmed when the room is dark
+  # 13% has proven to be the lowest reliable brightness setting. set to 0% for absolute darkness
   - platform: template
     id: virtuallightoutput
     type: binary
@@ -141,12 +177,12 @@ output:
           then:
             light.turn_on:
               id: sensorlight
-              brightness: 75%
+              brightness: 75% # 75% brightness when the virtual light entity is on
               effect: SensorEffect
           else:
             light.turn_on:
               id: sensorlight
-              brightness: 13%
+              brightness: 13% # 13% brigtness when the virtual light entity is off
               effect: SensorEffect
 
 # Enable logging
